@@ -16,16 +16,16 @@ A brief, one-sentence description of the project's purpose.
 
 A summary of the key files and directories.
 
-- `f-v-weather-app/src`: Main application source code.
-  - `f-v-weather-app/src/main.ts`: The entry point of the application.
-  - `f-v-weather-app/src/App.vue`: The main App component.
-  - `f-v-weather-app/src/components/`: Directory for reusable Vue components.
-  - `f-v-weather-app/src/views/`: Directory for page-level components.
-  - `f-v-weather-app/src/assets/`: Static assets like images, and styles.
-- `f-v-weather-app/public/`: Public assets that are copied directly to the build output.
-- `f-v-weather-app/cypress/`: End-to-end tests.
-- `f-v-weather-app/package.json`: Project dependencies and scripts.
-- `f-v-weather-app/.gitignore`: Files and folders to be ignored by git.
+- `index.html`: The main HTML file.
+- `src/`: Main application source code.
+  - `main.ts`: The entry point of the application.
+  - `App.vue`: The main App component.
+  - `assets/`: Static assets like images, and styles.
+  - `components/`: Directory for reusable Vue components.
+  - `services/`: Directory for weather API services.
+  - `stores/`: Directory for state management.
+  - `types/`: Directory for TypeScript types.
+  - `utils/`: Directory for utility functions and constants.
 
 ## Build & Development Commands
 
