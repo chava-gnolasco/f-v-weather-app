@@ -1,17 +1,47 @@
 <script setup lang="ts">
 import { ref, type Ref, onMounted } from "vue";
+import type { GeolocationInfo } from "../types/wheatherApiResponse";
+import { useWeatherStore } from "@/stores/weatherStore";
+import { retrieveWeather } from "@/services/weatherApi";
 
+/**
+ * Represents the position object returned by geolocation APIs.
+ * @property coords - The geographical coordinates.
+ */
 type Position = {
   coords: Geolocation;
 };
 
+/**
+ * Represents geographical coordinates.
+ * @property latitude - The latitude in decimal degrees.
+ * @property longitude - The longitude in decimal degrees.
+ */
 type Geolocation = {
   latitude: number;
   longitude: number;
 };
 
-const coords: Ref<Geolocation | undefined> = ref();
+const weatherStore = useWeatherStore();
 const geolocationBlockedByUser: Ref<boolean> = ref(false);
+const weatherInfo: Ref<GeolocationInfo | undefined> = ref();
+
+
+/**
+ * Asynchronously retrieves weather information and updates the `weatherInfo` ref.
+ * Handles any errors that occur during the retrieval process by logging them to the console.
+ *
+ * @async
+ * @function getWeather
+ * @returns {Promise<void>} Resolves when weather information has been retrieved and set.
+ */
+const getWeather = async () => {
+  try {
+    weatherInfo.value = await retrieveWeather();
+  } catch (error) {
+    console.error("Error in getWeather:", error);
+  }
+};
 
 /**
  * Callback function to handle the successful retrieval of the user's geolocation.
@@ -20,9 +50,9 @@ const geolocationBlockedByUser: Ref<boolean> = ref(false);
  * @param position - An object containing the user's geolocation data.
  *   @property coords - The Geolocation object with latitude, longitude, etc.
  */
-
-const getPosition = (position: { coords: Geolocation }) => {
-  coords.value = position.coords;
+const getPosition = async (position: Position) => {
+  weatherStore.saveCoords(position.coords.latitude, position.coords.longitude);
+  await getWeather();
 };
 
 
@@ -60,6 +90,33 @@ onMounted(async () => {
 
 
 <template>
-  <div v-if="coords && !geolocationBlockedByUser">{{ coords.latitude }} | {{ coords.longitude }}</div>
-  <div v-if="geolocationBlockedByUser">User denied access</div>
+  <div v-if="weatherStore.latitude && weatherStore.longitude && !geolocationBlockedByUser">
+    <div class="weather-info">
+      <div class="text-2xl font-semibold text-gray-800 mb-1">
+        {{ weatherInfo?.location?.region }}, {{ weatherInfo?.location?.tz_id }}
+      </div>
+      <div class="weather-icon">
+        <img :src="weatherInfo?.current?.condition.icon" class="w-20 h-20" />
+      </div>
+      <div class="text-4xl font-bold text-gray-900">{{ weatherInfo?.current?.temp_c }} °C</div>
+      <div class="text-lg font-medium text-gray-700 mb-2">{{ weatherInfo?.current?.condition.text }}</div>
+      <hr>
+      <div class="flex justify-center gap-6 text-sm text-gray-600 mb-4">
+        <span>Wind: {{ weatherInfo?.current?.wind_kph }} km/h</span>
+        <span>Humidity: {{ weatherInfo?.current?.humidity }}%</span>
+      </div>
+      <div class="text-sm text-gray-600">{{ weatherInfo?.location?.localtime }}</div>
+    </div>
+  </div>
+  <div v-if="geolocationBlockedByUser">
+    You should grant access to your location
+  </div>
 </template>
+
+<style scoped>
+.weather-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>

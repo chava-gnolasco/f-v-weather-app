@@ -19,7 +19,7 @@ function closeModal() {
 
 
 <template>
-    <dialog ref="mainModal">
+    <dialog ref="mainModal" class="mainModal-dialog">
         <slot name="header"></slot>
         <slot name="body"></slot>
         <slot name="footer"></slot>
