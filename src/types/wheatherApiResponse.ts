@@ -10,6 +10,7 @@ export interface Current {
   condition: Condition;
   wind_kph: number;
   feelslike_c: number;
+  humidity: number;
 }
 
 export interface Condition {
