@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type Ref } from 'vue';
+import { ref, type Ref } from "vue";
 
 type Geolocation = {
   latitude: number;
@@ -7,5 +7,4 @@ type Geolocation = {
 };
 
 const coords: Ref<Geolocation | undefined> = ref();
-
 </script>

@@ -1,3 +1,3 @@
 <template>
-  <h3>Hello World !!!</h3>
+  <h3>Weather App.</h3>
 </template>
